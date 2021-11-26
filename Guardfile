@@ -17,6 +17,6 @@ guard :rspec, cmd: 'bundle exec rspec' do
   dsl.watch_spec_files_for(ruby.lib_files)
 end
 
-guard :rubocop, all_on_start: false, cli: ['--auto-correct'] do
+guard :rubocop, all_on_start: false, cli: ['--auto-correct-all'] do
   watch(/.+\.rb$/)
 end
