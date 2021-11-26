@@ -167,7 +167,10 @@ module Textlint
     class TxtNodeRange < ::Range
       # @return [Array<Integer, Integer>]
       def as_textlint_json
-        [self.begin, self.end]
+        [
+          self.begin,
+          (exclude_end? ? self.end : self.end - 1)
+        ]
       end
     end
 

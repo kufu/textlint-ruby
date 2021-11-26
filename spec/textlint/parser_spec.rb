@@ -18,15 +18,28 @@ RSpec.describe Textlint::Parser do
               File.read(rb_file_path)
             end
 
+            let(:expected_json_path) do
+              rb_file_path.sub(/\.rb$/, '.json')
+            end
+
             let(:expected_json) do
-              json_path = rb_file_path.sub(/\.rb$/, '.json')
-              JSON.parse(File.read(json_path))
+              JSON.parse(File.read(expected_json_path))
             end
 
             it 'returns expected json' do
               is_expected.to be_a(Textlint::Nodes::TxtParentNode)
 
               stringified = parsed.as_textlint_json.to_json
+
+              expect(File.exist?(expected_json_path)).to be_truthy, -> {
+                <<~MSG
+                  Missing json file for test (#{expected_json_path})
+
+                  Current output:
+                  #{stringified}
+                MSG
+              }
+
               expect(JSON.parse(stringified)).to eq(expected_json)
             end
           end

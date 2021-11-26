@@ -15,6 +15,7 @@ guard :rspec, cmd: 'bundle exec rspec' do
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)
+  watch(%r{spec/samples/.*\.(rb|json)}) { 'spec/textlint/parser_spec.rb' }
 end
 
 guard :rubocop, all_on_start: false, cli: ['--auto-correct-all'] do

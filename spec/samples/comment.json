@@ -8,16 +8,16 @@
       "column": 0
     },
     "end": {
-      "line": 1,
-      "column": 13
+      "line": 2,
+      "column": 0
     }
   },
   "children": [
     {
       "loc": {
         "end": {
-          "column": 14,
-          "line": 1
+          "column": 0,
+          "line": 2
         },
         "start": {
           "column": 0,
@@ -27,7 +27,7 @@
       "range": [0, 14],
       "raw": "# hello world\n",
       "type": "Comment",
-      "value": "# hello world\n"
+      "value": " hello world\n"
     }
   ]
 }
