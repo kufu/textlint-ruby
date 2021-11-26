@@ -3,18 +3,16 @@
 require_relative 'lib/textlint/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'textlint'
+  spec.name          = 'textlint-ruby'
   spec.version       = Textlint::VERSION
   spec.authors       = ['alpaca-tc']
   spec.email         = ['alpaca-tc@alpaca.tc']
 
-  spec.summary       = 'ruby AST parser for textlint'
+  spec.summary       = 'ruby source code parser for textlint'
   spec.description   = ''
   spec.homepage      = 'https://github.com/alpaca-tc/textlint-ruby'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 2.6.0'
-
-  spec.metadata['allowed_push_host'] = "TODO: Set to 'https://mygemserver.com'"
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/alpaca-tc/textlint-ruby'

@@ -11,9 +11,7 @@ RSpec.describe Textlint::Parser do
         sample_directory = File.expand_path('../samples', __dir__)
         sample_files = Dir["#{sample_directory}/**/*.rb"]
 
-        debug_path = nil
-        # debug_path = '/Users/alpaca-tc/projects/alpaca-tc/textlint-ruby/spec/samples/multiline_comment.rb'
-        sample_files.reject { _1 != debug_path if debug_path }.each do |rb_file_path|
+        sample_files.each do |rb_file_path|
           describe "parsed #{rb_file_path}" do
             let(:src) do
               File.read(rb_file_path)
