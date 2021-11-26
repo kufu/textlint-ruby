@@ -24,19 +24,18 @@ module Textlint
         @raw = @src[@range]
 
         method_name = :"custom_#{event}"
-        node = send(method_name, node) if respond_to?(method_name, true)
+        node = send(method_name, node)
 
         @pos += @token.size
 
         node
       end
 
-      def custom_on_comment(parentNode)
-        node = Textlint::Nodes::TxtTextNode.new(
-          type: Textlint::Nodes::COMMENT,
+      def default_node_attributes(type:, **attributes)
+        {
+          type: type,
           raw: @raw,
           range: @range,
-          value: @token.gsub(/\A#/, ''),
           loc: Textlint::Nodes::TxtNodeLineLocation.new(
             start: Textlint::Nodes::TxtNodePosition.new(
               line: lineno,
@@ -44,16 +43,23 @@ module Textlint
             ),
             end: end_txt_node_position
           )
+        }.merge(attributes)
+      end
+
+      def custom_on_comment(parentNode)
+        node = Textlint::Nodes::TxtTextNode.new(
+          **default_node_attributes(
+            type: Textlint::Nodes::COMMENT,
+            value: @token.gsub(/\A#/, '')
+          )
         )
 
         parentNode.children.push(node)
         parentNode
       end
 
-      # Start embedded document
-      # =begin
-      def custom_on_embdoc_beg(parentNode)
-        @begins['on_embdoc'].push(
+      def push_begin_event_node(event_name)
+        @begins[event_name].push(
           begin_range: @range,
           begin_location: Textlint::Nodes::TxtNodePosition.new(
             line: lineno,
@@ -61,7 +67,12 @@ module Textlint
           ),
           tokens: []
         )
+      end
 
+      # Start embedded document
+      # =begin
+      def custom_on_embdoc_beg(parentNode)
+        push_begin_event_node('on_embdoc')
         parentNode
       end
 
@@ -101,7 +112,18 @@ module Textlint
         parentNode
       end
 
-      def line_location; end
+      def custom_on_tstring_content(parentNode)
+        node = Textlint::Nodes::TxtTextNode.new(
+          **default_node_attributes(
+            type: Textlint::Nodes::STR,
+            value: @token
+          )
+        )
+
+        parentNode.children.push(node)
+
+        parentNode
+      end
 
       def end_txt_node_position
         break_count = @token.scan(Textlint::BREAK_RE).size
@@ -118,13 +140,19 @@ module Textlint
         )
       end
 
-      # def on_tstring_beg(tok, f)
-      #   f << %(<span class="string">#{CGI.escapeHTML(tok)})
-      # end
-      #
-      # def on_tstring_end(tok, f)
-      #   f << %(#{CGI.escapeHTML(tok)}</span>)
-      # end
+      def noop(parentNode)
+        parentNode
+      end
+
+      # undefined methods for scanner event are ignored
+      # If you can implement new scanner event, please define custom method.
+      Ripper::SCANNER_EVENTS.each do |event|
+        custom_method_name = :"custom_on_#{event}"
+
+        unless private_method_defined?(custom_method_name, true)
+          alias_method custom_method_name, :noop
+        end
+      end
     end
 
     # Parse ruby code to AST for textlint

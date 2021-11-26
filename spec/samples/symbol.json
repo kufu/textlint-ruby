@@ -1,0 +1,17 @@
+{
+  "type": "Document",
+  "raw": ":hello_world\n",
+  "range": [0, 13],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 0
+    }
+  },
+  "children": []
+}
+

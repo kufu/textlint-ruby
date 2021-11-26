@@ -1,0 +1,32 @@
+{
+  "type": "Document",
+  "raw": "'hello world'\n",
+  "range": [0, 14],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 0
+    }
+  },
+  "children": [{
+    "type": "Str",
+    "raw": "hello world",
+    "range": [1, 12],
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 1
+      },
+      "end": {
+        "line": 1,
+        "column": 12
+      }
+    },
+    "value": "hello world"
+  }]
+}
+
