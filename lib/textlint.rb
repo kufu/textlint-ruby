@@ -6,4 +6,5 @@ require 'textlint/nodes'
 require 'textlint/parser'
 
 module Textlint
+  BREAK_RE = /\r?\n/.freeze
 end
