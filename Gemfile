@@ -2,11 +2,11 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in textlint-ruby.gemspec
 gemspec
 
-gem "rake", "~> 13.0"
-
-gem "rspec", "~> 3.0"
-
-gem "rubocop", "~> 1.7"
+gem "rspec"
+gem "rubocop"
+gem "guard"
+gem "guard-rspec"
+gem 'guard-rubocop'
+gem 'pry'
