@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby --disable-all
+# frozen_string_literal: true
+
+load "#{__dir__}/textlint-ruby"

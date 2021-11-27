@@ -27,6 +27,9 @@ Parse ruby to textlint AST
 ```sh
 $ textlint-ruby ./path/to/file.rb
 {"type":"Document","raw":"...","range":[0,465],"loc":{"start":{"line":1,"column":0},"end":{"line":26,"column":0}},"children":[...]}
+
+# textlint-ruby-optimized is 10x faster but many features of ruby are disabled.
+$ textlint-ruby-optimized ./path/to/file.rb
 ```
 
 ### Supported nodes
