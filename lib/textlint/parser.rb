@@ -12,7 +12,6 @@ module Textlint
         @src = src
         @pos = 0
         @lines = @src.lines
-        @begins = Hash.new { |h, k| h[k] = [] }
       end
 
       private
@@ -47,68 +46,6 @@ module Textlint
             end: end_txt_node_position
           )
         }.merge(attributes)
-      end
-
-      def custom_on_comment(parentNode)
-        node = Textlint::Nodes::TxtTextNode.new(
-          **default_node_attributes(
-            type: Textlint::Nodes::COMMENT,
-            value: @token.gsub(/\A#/, '')
-          )
-        )
-
-        parentNode.children.push(node)
-        parentNode
-      end
-
-      def push_begin_event_node(event_name)
-        @begins[event_name].push(
-          begin_range: @range,
-          begin_location: Textlint::Nodes::TxtNodePosition.new(
-            line: lineno,
-            column: column
-          ),
-          tokens: []
-        )
-      end
-
-      # Start embedded document
-      # =begin
-      def custom_on_embdoc_beg(parentNode)
-        push_begin_event_node('on_embdoc')
-        parentNode
-      end
-
-      # embedded document within start~end
-      # =begin   | custom_on_embdoc_beg
-      # <-here   | custom_on_embdoc
-      # <-here   | custom_on_embdoc
-      # =end     | custom_on_embdoc_end
-      def custom_on_embdoc(parentNode)
-        @begins['on_embdoc'].last[:tokens].push(@token)
-        parentNode
-      end
-
-      # End embedded document
-      # =end
-      def custom_on_embdoc_end(parentNode)
-        embdoc = @begins['on_embdoc'].pop
-
-        range = embdoc[:begin_range].begin...@range.end
-
-        node = Textlint::Nodes::TxtTextNode.new(
-          type: Textlint::Nodes::COMMENT,
-          raw: @src[range],
-          range: range,
-          value: embdoc[:tokens].join,
-          loc: Textlint::Nodes::TxtNodeLineLocation.new(
-            start: embdoc[:begin_location],
-            end: end_txt_node_position
-          )
-        )
-
-        parentNode.children.push(node)
-        parentNode
       end
 
       def custom_on_tstring_content(parentNode)

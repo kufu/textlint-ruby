@@ -35,7 +35,7 @@ $ textlint-ruby-optimized ./path/to/file.rb
 ### Supported nodes
 
 These types are defined in `@textlint/ast-node-types`.
-Supported node types are only `Document`, `Comment` and `Str` because this plugin is used to format strings embedded in ruby programs.
+Supported node types are only `Document` and `Str` because this plugin is used to format strings embedded in ruby programs.
 
 | Type name                       | Node type     | Supported                            |
 | ------------------------------- | ------------- | ------------------------------------ |
@@ -69,7 +69,7 @@ Supported node types are only `Document`, `Comment` and `Str` because this plugi
 | ASTNodeTypes.ImageExit          | TxtNode       |                                      |
 | ASTNodeTypes.HorizontalRule     | TxtNode       |                                      |
 | ASTNodeTypes.HorizontalRuleExit | TxtNode       |                                      |
-| ASTNodeTypes.Comment            | TxtTextNode   | yes                                  |
+| ASTNodeTypes.Comment            | TxtTextNode   |                                      |
 | ASTNodeTypes.CommentExit        | TxtTextNode   |                                      |
 | ASTNodeTypes.Str                | TxtTextNode   | yes                                  |
 | ASTNodeTypes.StrExit            | TxtTextNode   |                                      |
