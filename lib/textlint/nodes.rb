@@ -100,7 +100,7 @@ module Textlint
 
       # @param type [String]
       # @param raw [String]
-      # @param range [Textlint::Nodes::TxtNodeRange]
+      # @param range [Range]
       # @param loc [Textlint::Nodes::TxtNodeLineLocation]
       def initialize(type:, raw:, range:, loc:)
         @type = type
@@ -114,7 +114,10 @@ module Textlint
         {
           type: type,
           raw: raw,
-          range: range.as_textlint_json,
+          range: [
+            range.begin,
+            (range.exclude_end? ? range.end : range.end - 1)
+          ],
           loc: loc.as_textlint_json
         }
       end
@@ -160,17 +163,6 @@ module Textlint
           start: start.as_textlint_json,
           end: self.end.as_textlint_json
         }
-      end
-    end
-
-    # export type TextNodeRange = [number, number];
-    class TxtNodeRange < ::Range
-      # @return [Array<Integer, Integer>]
-      def as_textlint_json
-        [
-          self.begin,
-          (exclude_end? ? self.end : self.end - 1)
-        ]
       end
     end
 

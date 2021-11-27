@@ -11,7 +11,7 @@ RSpec.describe Textlint::Nodes do
         described_class.new(
           type: Textlint::Nodes::DOCUMENT,
           raw: 'raw',
-          range: Textlint::Nodes::TxtNodeRange.new(0, 1),
+          range: Range.new(0, 1),
           loc: Textlint::Nodes::TxtNodeLineLocation.new(
             start: Textlint::Nodes::TxtNodePosition.new(
               line: 1,
@@ -55,7 +55,7 @@ RSpec.describe Textlint::Nodes do
         described_class.new(
           type: Textlint::Nodes::DOCUMENT,
           raw: 'raw',
-          range: Textlint::Nodes::TxtNodeRange.new(0, 2),
+          range: Range.new(0, 2),
           loc: Textlint::Nodes::TxtNodeLineLocation.new(
             start: Textlint::Nodes::TxtNodePosition.new(
               line: 1,
@@ -70,7 +70,7 @@ RSpec.describe Textlint::Nodes do
             Textlint::Nodes::TxtTextNode.new(
               type: Textlint::Nodes::STR,
               raw: 'raw',
-              range: Textlint::Nodes::TxtNodeRange.new(0, 2),
+              range: Range.new(0, 2),
               loc: Textlint::Nodes::TxtNodeLineLocation.new(
                 start: Textlint::Nodes::TxtNodePosition.new(
                   line: 1,

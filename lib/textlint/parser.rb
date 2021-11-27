@@ -20,7 +20,7 @@ module Textlint
       # NOTE: Instance variables are allowed to assign only here to readable code.
       def on_default(event, token, node)
         @token = token
-        @range = Textlint::Nodes::TxtNodeRange.new(@pos, @pos + @token.size, exclude_end: true)
+        @range = @pos...(@pos + @token.size)
         @raw = @src[@range]
 
         method_name = :"custom_#{event}"
@@ -91,11 +91,7 @@ module Textlint
       def custom_on_embdoc_end(parentNode)
         embdoc = @begins['on_embdoc'].pop
 
-        range = Textlint::Nodes::TxtNodeRange.new(
-          embdoc[:begin_range].begin,
-          @range.end,
-          exclude_end: true
-        )
+        range = embdoc[:begin_range].begin...@range.end
 
         node = Textlint::Nodes::TxtTextNode.new(
           type: Textlint::Nodes::COMMENT,
@@ -178,7 +174,7 @@ module Textlint
       document = Textlint::Nodes::TxtParentNode.new(
         type: Textlint::Nodes::DOCUMENT,
         raw: @src,
-        range: Textlint::Nodes::TxtNodeRange.new(0, @src.size, exclude_end: true),
+        range: 0...@src.size,
         loc: Textlint::Nodes::TxtNodeLineLocation.new(
           start: Textlint::Nodes::TxtNodePosition.new(
             line: 1,
