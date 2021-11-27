@@ -20,11 +20,14 @@ module Textlint
       # NOTE: Instance variables are allowed to assign only here to readable code.
       def on_default(event, token, node)
         @token = token
-        @range = @pos...(@pos + @token.size)
-        @raw = @src[@range]
 
         method_name = :"custom_#{event}"
-        node = send(method_name, node) if respond_to?(method_name, true)
+
+        if respond_to?(method_name, true)
+          @range = @pos...(@pos + @token.size)
+          @raw = @src[@range]
+          node = send(method_name, node)
+        end
 
         @pos += @token.size
 
