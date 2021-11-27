@@ -173,6 +173,8 @@ module Textlint
     #
     # @return [Textlint::Nodes::TxtParentNode]
     def call
+      check_syntax!
+
       document = Textlint::Nodes::TxtParentNode.new(
         type: Textlint::Nodes::DOCUMENT,
         raw: @src,
@@ -190,6 +192,14 @@ module Textlint
       )
 
       RubyToTextlintAST.new(@src).parse(document)
+    end
+
+    private
+
+    def check_syntax!
+      RubyVM::InstructionSequence.compile(@src)
+    rescue ::SyntaxError => error
+      raise Textlint::SyntaxError, error.message
     end
   end
 end

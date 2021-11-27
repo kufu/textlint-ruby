@@ -44,6 +44,14 @@ RSpec.describe Textlint::Parser do
           end
         end
       end
+
+      context 'given broken file' do
+        let(:src) do
+          ': 0'
+        end
+
+        it { expect { subject }.to raise_error(Textlint::SyntaxError) }
+      end
     end
   end
 end
