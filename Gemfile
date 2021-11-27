@@ -5,6 +5,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rspec"
+gem "rake"
 gem "rubocop"
 gem "guard"
 gem "guard-rspec"
