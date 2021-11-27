@@ -24,7 +24,7 @@ module Textlint
         @raw = @src[@range]
 
         method_name = :"custom_#{event}"
-        node = send(method_name, node)
+        node = send(method_name, node) if respond_to?(method_name, true)
 
         @pos += @token.size
 
@@ -134,20 +134,6 @@ module Textlint
           line: lineno + break_count,
           column: last_column
         )
-      end
-
-      def noop(parentNode)
-        parentNode
-      end
-
-      # undefined methods for scanner event are ignored
-      # If you can implement new scanner event, please define custom method.
-      Ripper::SCANNER_EVENTS.each do |event|
-        custom_method_name = :"custom_on_#{event}"
-
-        unless private_method_defined?(custom_method_name, true)
-          alias_method custom_method_name, :noop
-        end
       end
     end
 
