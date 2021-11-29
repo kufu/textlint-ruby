@@ -53,7 +53,8 @@ module Textlint
       end
 
       def custom_on_tstring_content(parentNode)
-        return parentNode unless @events.last == 'tstring'
+        begin_event_name, _begin_node = @events.last
+        return unless %w[tstring qwords].include?(begin_event_name)
 
         node = Textlint::Nodes::TxtTextNode.new(
           **default_node_attributes(
@@ -67,8 +68,29 @@ module Textlint
         parentNode
       end
 
-      def inside_event?(event)
-        @events.lazy.include?(event)
+      def custom_on_comment(parentNode)
+        node = Textlint::Nodes::TxtTextNode.new(
+          **default_node_attributes(
+            type: Textlint::Nodes::COMMENT,
+            value: @token.gsub(/\A#/, '')
+          )
+        )
+
+        parentNode.children.push(node)
+      end
+
+      def custom_on_embdoc(parentNode)
+        _begin_event_name, begin_node = @events.last
+
+        node = Textlint::Nodes::TxtTextNode.new(
+          type: Textlint::Nodes::COMMENT,
+          loc: begin_node.loc,
+          range: begin_node.range,
+          raw: begin_node.raw,
+          value: @token
+        )
+
+        parentNode.children.push(node)
       end
 
       def end_txt_node_position
@@ -92,7 +114,17 @@ module Textlint
       end
 
       def on_beg_event(*)
-        @events.push(event_name)
+        @events.push(
+          [
+            event_name,
+            Textlint::Nodes::TxtTextNode.new(
+              **default_node_attributes(
+                type: nil, # NOTE: beg event has no type
+                value: @token
+              )
+            )
+          ]
+        )
       end
 
       def on_end_event(*)
@@ -102,10 +134,13 @@ module Textlint
       alias custom_on_tstring_beg on_beg_event
       alias custom_on_regexp_beg on_beg_event
       alias custom_on_embexpr_beg on_beg_event
+      alias custom_on_qwords_beg on_beg_event
+      alias custom_on_embdoc_beg on_beg_event
 
       alias custom_on_tstring_end on_end_event
       alias custom_on_regexp_end on_end_event
       alias custom_on_embexpr_end on_end_event
+      alias custom_on_embdoc_end on_end_event
     end
 
     # Parse ruby code to AST for textlint

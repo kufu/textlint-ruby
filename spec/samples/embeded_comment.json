@@ -1,0 +1,28 @@
+{
+  "type": "Document",
+  "raw": "=begin\nhello world\n=end\n",
+  "range": [0, 24],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 4,
+      "column": 0
+    }
+  },
+  "children": [{
+    "loc": {
+      "end": {
+        "column": 0, "line": 2
+      }, "start": {
+        "column": 0, "line": 1
+      }
+    },
+    "range": [0, 7],
+    "raw": "=begin\n",
+    "type": "Comment",
+    "value": "hello world\n"
+  }]
+}
