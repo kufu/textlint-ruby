@@ -1,0 +1,32 @@
+{
+  "type": "Document",
+  "raw": "/#{/a#{'b'}/}/\n",
+  "range": [0, 15],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 0
+    }
+  },
+  "children": [{
+    "type": "Str",
+    "raw": "b",
+    "range": [8, 9],
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 8
+      },
+      "end": {
+        "line": 1,
+        "column": 9
+      }
+    },
+    "value": "b"
+  }]
+}
+

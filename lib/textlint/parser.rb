@@ -5,6 +5,8 @@ require 'ripper'
 module Textlint
   class Parser
     class RubyToTextlintAST < ::Ripper::Filter
+      EVENT_RE = /\Aon_(?<name>\w*)_(?:beg|end)\z/.freeze
+
       # @param src [String]
       # @param lines [Array<String>]
       def initialize(src)
@@ -12,6 +14,7 @@ module Textlint
         @src = src
         @pos = 0
         @lines = @src.lines
+        @events = []
       end
 
       private
@@ -19,13 +22,14 @@ module Textlint
       # NOTE: Instance variables are allowed to assign only here to readable code.
       def on_default(event, token, node)
         @token = token
+        @event = event
 
         method_name = :"custom_#{event}"
 
         if respond_to?(method_name, true)
           @range = @pos...(@pos + @token.size)
           @raw = @src[@range]
-          node = send(method_name, node)
+          send(method_name, node)
         end
 
         @pos += @token.size
@@ -49,6 +53,8 @@ module Textlint
       end
 
       def custom_on_tstring_content(parentNode)
+        return parentNode unless @events.last == 'tstring'
+
         node = Textlint::Nodes::TxtTextNode.new(
           **default_node_attributes(
             type: Textlint::Nodes::STR,
@@ -59,6 +65,10 @@ module Textlint
         parentNode.children.push(node)
 
         parentNode
+      end
+
+      def inside_event?(event)
+        @events.lazy.include?(event)
       end
 
       def end_txt_node_position
@@ -75,6 +85,27 @@ module Textlint
           column: last_column
         )
       end
+
+      def event_name
+        matched = EVENT_RE.match(@event)
+        matched[:name] if matched
+      end
+
+      def on_beg_event(*)
+        @events.push(event_name)
+      end
+
+      def on_end_event(*)
+        @events.pop
+      end
+
+      alias custom_on_tstring_beg on_beg_event
+      alias custom_on_regexp_beg on_beg_event
+      alias custom_on_embexpr_beg on_beg_event
+
+      alias custom_on_tstring_end on_end_event
+      alias custom_on_regexp_end on_end_event
+      alias custom_on_embexpr_end on_end_event
     end
 
     # Parse ruby code to AST for textlint
