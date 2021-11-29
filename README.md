@@ -4,8 +4,6 @@ Ruby AST parser for [textlint-ruby-plugin](https://github.com/alpaca-tc/textlint
 
 ## Installation
 
-**TODO: release gems**
-
 Add this line to your application's Gemfile:
 
 ```ruby
