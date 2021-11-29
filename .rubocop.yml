@@ -4,7 +4,7 @@ AllCops:
     - 'gemfiles/**/*'
     - 'spec/samples/**/*'
     - Gemfile
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.5
   DisplayCopNames: true
   NewCops: disable
 

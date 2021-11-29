@@ -1,6 +1,10 @@
 version: 2.1
 
 executors:
+  ruby_2_5:
+    docker:
+      - image: ruby:2.5
+
   ruby_2_6:
     docker:
       - image: ruby:2.6
@@ -23,6 +27,11 @@ commands:
       - run: bundle exec rubocop
 
 jobs:
+  ruby_2_5:
+    executor: ruby_2_5
+    steps:
+      - run_test
+
   ruby_2_6:
     executor: ruby_2_6
     steps:
@@ -43,6 +52,7 @@ workflows:
 
   test:
     jobs: &jobs
+      - ruby_2_5
       - ruby_2_6
       - ruby_2_7
       - ruby_3_0
