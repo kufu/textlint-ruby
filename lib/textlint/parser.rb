@@ -19,6 +19,7 @@ module Textlint
 
       private
 
+      # All events call this method
       # NOTE: Instance variables are allowed to assign only here to readable code.
       def on_default(event, token, node)
         @token = token
@@ -38,6 +39,14 @@ module Textlint
       end
 
       def default_node_attributes(type:, **attributes)
+        break_count = @token.scan(Textlint::BREAK_RE).size
+
+        last_column = if break_count == 0
+                        column + @token.size
+                      else
+                        @token.match(LAST_LINE_RE).to_s.size
+                      end
+
         {
           type: type,
           raw: @raw,
@@ -47,11 +56,17 @@ module Textlint
               line: lineno,
               column: column
             ),
-            end: end_txt_node_position
+            end: Textlint::Nodes::TxtNodePosition.new(
+              line: lineno + break_count,
+              column: last_column
+            )
           )
         }.merge(attributes)
       end
 
+      # "hello world"
+      # 'hello world'
+      # %q{hello world}
       def custom_on_tstring_content(parentNode)
         begin_event_name, _begin_node = @events.last
         return unless %w[tstring qwords].include?(begin_event_name)
@@ -68,6 +83,7 @@ module Textlint
         parentNode
       end
 
+      # # hello world
       def custom_on_comment(parentNode)
         node = Textlint::Nodes::TxtTextNode.new(
           **default_node_attributes(
@@ -79,6 +95,9 @@ module Textlint
         parentNode.children.push(node)
       end
 
+      # =begin
+      # hello world
+      # =end
       def custom_on_embdoc(parentNode)
         _begin_event_name, begin_node = @events.last
 
@@ -91,21 +110,6 @@ module Textlint
         )
 
         parentNode.children.push(node)
-      end
-
-      def end_txt_node_position
-        break_count = @token.scan(Textlint::BREAK_RE).size
-
-        last_column = if break_count == 0
-                        column + @token.size
-                      else
-                        @token.match(LAST_LINE_RE).to_s.size
-                      end
-
-        Textlint::Nodes::TxtNodePosition.new(
-          line: lineno + break_count,
-          column: last_column
-        )
       end
 
       def event_name
