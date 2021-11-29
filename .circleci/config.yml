@@ -1,13 +1,58 @@
 version: 2.1
-jobs:
-  build:
+
+executors:
+  ruby_2_6:
     docker:
-      - image: ruby:3.0.2
+      - image: ruby:2.6
+
+  ruby_2_7:
+    docker:
+      - image: ruby:2.7
+
+  ruby_3_0:
+    docker:
+      - image: ruby:3.0
+
+commands:
+  run_test:
     steps:
       - checkout
-      - run:
-          name: Run the default task
-          command: |
-            gem install bundler -v 2.2.22
-            bundle install
-            bundle exec rake
+      - run: gem install bundler
+      - run: bundle install
+      - run: bundle exec rspec
+      - run: bundle exec rubocop
+
+jobs:
+  ruby_2_6:
+    executor: ruby_2_6
+    steps:
+      - run_test
+
+  ruby_2_7:
+    executor: ruby_2_7
+    steps:
+      - run_test
+
+  ruby_3_0:
+    executor: ruby_3_0
+    steps:
+      - run_test
+
+workflows:
+  version: 2
+
+  test:
+    jobs: &jobs
+      - ruby_2_6
+      - ruby_2_7
+      - ruby_3_0
+
+  daily_test:
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs: *jobs
