@@ -4,7 +4,7 @@ require_relative 'lib/textlint/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'textlint-ruby'
-  spec.version       = Textlint::VERSION
+  spec.version       = Textlint::VERSION::STRING
   spec.authors       = ['alpaca-tc']
   spec.email         = ['alpaca-tc@alpaca.tc']
 
