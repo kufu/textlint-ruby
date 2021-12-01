@@ -23,11 +23,12 @@ Or install it yourself as:
 Parse ruby to textlint AST
 
 ```sh
+# Parse specific file
 $ textlint-ruby ./path/to/file.rb
 {"type":"Document","raw":"...","range":[0,465],"loc":{"start":{"line":1,"column":0},"end":{"line":26,"column":0}},"children":[...]}
 
-# textlint-ruby-optimized is 10x faster but many features of ruby are disabled.
-$ textlint-ruby-optimized ./path/to/file.rb
+# Boot textlint-ruby server for textlint-plugin-ruby
+$ textlint-ruby --stdio
 ```
 
 ### Supported nodes
@@ -67,7 +68,7 @@ Supported node types are only `Document` and `Str` because this plugin is used t
 | ASTNodeTypes.ImageExit          | TxtNode       |                                      |
 | ASTNodeTypes.HorizontalRule     | TxtNode       |                                      |
 | ASTNodeTypes.HorizontalRuleExit | TxtNode       |                                      |
-| ASTNodeTypes.Comment            | TxtTextNode   |                                      |
+| ASTNodeTypes.Comment            | TxtTextNode   | yes                                  |
 | ASTNodeTypes.CommentExit        | TxtTextNode   |                                      |
 | ASTNodeTypes.Str                | TxtTextNode   | yes                                  |
 | ASTNodeTypes.StrExit            | TxtTextNode   |                                      |
