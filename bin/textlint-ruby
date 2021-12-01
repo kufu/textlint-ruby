@@ -5,21 +5,4 @@ $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 
 require 'textlint'
 
-path = ARGV[0]
-
-unless File.exist?(path.to_s)
-  warn("Error: No such file or directory: #{path}")
-  exit(1)
-end
-
-content = File.read(path)
-
-begin
-  ast = Textlint::Parser.parse(content)
-  puts(ast.as_textlint_json.to_json)
-rescue Textlint::SyntaxError => error
-  warn("Failed to compile: #{path}")
-  warn('')
-  warn(error)
-  exit(1)
-end
+Textlint::Cli.run(ARGV.clone)
