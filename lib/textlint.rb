@@ -4,10 +4,14 @@ require 'json'
 require 'textlint/version'
 require 'textlint/nodes'
 require 'textlint/parser'
+require 'textlint/cli'
+require 'textlint/server'
 
 module Textlint
   BREAK_RE = /\r?\n/.freeze
   LAST_LINE_RE = /(?!\r?\n).*\z/.freeze
 
-  class SyntaxError < StandardError; end
+  class Error < StandardError; end
+  class SyntaxError < Error; end
+  class RequestError < Error; end
 end
