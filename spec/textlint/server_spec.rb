@@ -120,20 +120,51 @@ RSpec.describe Textlint::Server do
       end
 
       context 'do_parse' do
-        let(:ruby_path) do
-          File.expand_path('../samples/comment.rb', __dir__)
+        context 'given valid file' do
+          let(:ruby_path) do
+            File.expand_path('../samples/comment.rb', __dir__)
+          end
+
+          let(:json_path) do
+            File.expand_path('../samples/comment.json', __dir__)
+          end
+
+          it 'returns parsed AST' do
+            request(request_base.merge(action: 'parse', path: ruby_path))
+            message = receive_io(stdout) { start_server.call }
+            json = JSON.parse(message)
+
+            expect(json).to eq({ 'request_seq' => 1, 'result' => JSON.parse(File.read(json_path)) })
+          end
         end
 
-        let(:json_path) do
-          File.expand_path('../samples/comment.json', __dir__)
-        end
+        context 'given wrong file' do
+          let(:src) do
+            ': 0'
+          end
 
-        it 'returns parsed AST' do
-          request(request_base.merge(action: 'parse', path: ruby_path))
-          message = receive_io(stdout) { start_server.call }
-          json = JSON.parse(message)
+          let(:ruby_path) do
+            f = Tempfile.new(['a', '.rb'])
+            f.write(src)
+            f.rewind
+            f.path
+          end
 
-          expect(json).to eq({ 'request_seq' => 1, 'result' => JSON.parse(File.read(json_path)) })
+          it 'warns error' do
+            request(request_base.merge(action: 'parse', path: ruby_path))
+            message = receive_io(stderr) { start_server.call }
+
+            expect(message).to eq("Failed to parse: #{ruby_path}. syntax error or the file is incompatible with the ruby(#{RUBY_VERSION}) running textlint-ruby\n")
+          end
+
+          it 'returns parsed AST' do
+            request(request_base.merge(action: 'parse', path: ruby_path))
+            message = receive_io(stdout) { start_server.call }
+            json = JSON.parse(message)
+            expected_result = JSON.parse(Textlint::Parser.build_document(src).as_textlint_json.to_json)
+
+            expect(json).to eq({ 'request_seq' => 1, 'result' => expected_result })
+          end
         end
       end
     end

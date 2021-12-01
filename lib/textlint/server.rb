@@ -70,11 +70,15 @@ module Textlint
           validate_request(json)
           yield(json)
         rescue JSON::JSONError
-          @stderr.puts("Can't parse request to JSON")
+          warn("Can't parse request to JSON")
         rescue StandardError => error
-          @stderr.puts(error.message)
+          warn(error.message)
         end
       end
+    end
+
+    def warn(message)
+      @stderr.puts(message)
     end
 
     def trap_signals
@@ -95,10 +99,17 @@ module Textlint
       end
 
       content = File.read(path)
-      ast = Textlint::Parser.parse(content)
+
+      ast = begin
+        Textlint::Parser.parse(content)
+      rescue Textlint::SyntaxError
+        error = Textlint::RequestError.new("Failed to parse: #{path}. syntax error or the file is incompatible with the ruby(#{RUBY_VERSION}) running textlint-ruby")
+        warn(error)
+
+        Textlint::Parser.build_document(content)
+      end
+
       ast.as_textlint_json
-    rescue Textlint::SyntaxError
-      raise(Textlint::RequestError, "Failed to compile: #{path}")
     end
   end
 end

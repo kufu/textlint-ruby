@@ -156,6 +156,29 @@ module Textlint
       new(src).call
     end
 
+    # Parse ruby code to TxtParentNode
+    #
+    # @param src [String]
+    #
+    # @return [Textlint::Nodes::TxtParentNode]
+    def self.build_document(src)
+      Textlint::Nodes::TxtParentNode.new(
+        type: Textlint::Nodes::DOCUMENT,
+        raw: src,
+        range: 0...src.size,
+        loc: Textlint::Nodes::TxtNodeLineLocation.new(
+          start: Textlint::Nodes::TxtNodePosition.new(
+            line: 1,
+            column: 0
+          ),
+          end: Textlint::Nodes::TxtNodePosition.new(
+            line: src.split(Textlint::BREAK_RE).size + 1,
+            column: src.match(LAST_LINE_RE).to_s.size # extract last line
+          )
+        )
+      )
+    end
+
     # @param src [String] ruby source code
     def initialize(src)
       @src = src
@@ -167,22 +190,7 @@ module Textlint
     def call
       check_syntax!
 
-      document = Textlint::Nodes::TxtParentNode.new(
-        type: Textlint::Nodes::DOCUMENT,
-        raw: @src,
-        range: 0...@src.size,
-        loc: Textlint::Nodes::TxtNodeLineLocation.new(
-          start: Textlint::Nodes::TxtNodePosition.new(
-            line: 1,
-            column: 0
-          ),
-          end: Textlint::Nodes::TxtNodePosition.new(
-            line: @src.split(Textlint::BREAK_RE).size + 1,
-            column: @src.match(LAST_LINE_RE).to_s.size # extract last line
-          )
-        )
-      )
-
+      document = self.class.build_document(@src)
       RubyToTextlintAST.new(@src).parse(document)
     end
 
