@@ -1,6 +1,9 @@
 ## [Unreleased]
 
+## [2.0.1]
+
 - Support `on_ignored_nl` event in Ruby 2.6
+- Changed the repository owner from alpaca-tc to kufu
 
 ## [2.0.0]
 
