@@ -22,7 +22,7 @@ module Textlint
       # All events call this method
       # NOTE: Instance variables are allowed to assign only here to readable code.
       def on_default(event, token, node)
-        @token = token
+        @token = token.to_s
         @event = event
 
         method_name = :"custom_#{event}"

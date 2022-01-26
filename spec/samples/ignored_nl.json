@@ -1,0 +1,1 @@
+{"type":"Document","raw":"method_1 # comment\n.method_2\n","range":[0,29],"loc":{"start":{"line":1,"column":0},"end":{"line":3,"column":0}},"children":[{"type":"Comment","raw":"# comment\n","range":[9,19],"loc":{"start":{"line":1,"column":9},"end":{"line":2,"column":0}},"value":" comment\n"}]}
