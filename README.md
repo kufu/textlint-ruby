@@ -1,6 +1,6 @@
 # textlint-ruby
 
-Ruby AST parser for [textlint-ruby-plugin](https://github.com/kufu/textlint-ruby-plugin).
+Ruby AST parser for [textlint-plugin-ruby](https://github.com/kufu/textlint-plugin-ruby).
 
 ## Installation
 
