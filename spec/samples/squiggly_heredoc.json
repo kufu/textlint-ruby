@@ -1,0 +1,1 @@
+{"type":"Document","raw":"<<~NOTE\n  hello\nNOTE\n","range":[0,21],"loc":{"start":{"line":1,"column":0},"end":{"line":4,"column":0}},"children":[{"type":"Str","raw":"hello\n","range":[10,16],"loc":{"start":{"line":2,"column":2},"end":{"line":3,"column":0}},"value":"hello\n"}]}

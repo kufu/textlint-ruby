@@ -6,6 +6,7 @@ module Textlint
   class Parser
     class RubyToTextlintAST < ::Ripper::Filter
       EVENT_RE = /\Aon_(?<name>\w*)_(?:beg|end)\z/.freeze
+      TSTRING_BEG_EVENTS = %w[tstring qwords heredoc].freeze
 
       # @param src [String]
       # @param lines [Array<String>]
@@ -69,7 +70,7 @@ module Textlint
       # %q{hello world}
       def custom_on_tstring_content(parentNode)
         begin_event_name, _begin_node = @events.last
-        return unless %w[tstring qwords].include?(begin_event_name)
+        return unless TSTRING_BEG_EVENTS.include?(begin_event_name)
 
         node = Textlint::Nodes::TxtTextNode.new(
           **default_node_attributes(
@@ -140,11 +141,13 @@ module Textlint
       alias custom_on_embexpr_beg on_beg_event
       alias custom_on_qwords_beg on_beg_event
       alias custom_on_embdoc_beg on_beg_event
+      alias custom_on_heredoc_beg on_beg_event
 
       alias custom_on_tstring_end on_end_event
       alias custom_on_regexp_end on_end_event
       alias custom_on_embexpr_end on_end_event
       alias custom_on_embdoc_end on_end_event
+      alias custom_on_heredoc_end on_end_event
     end
 
     # Parse ruby code to AST for textlint

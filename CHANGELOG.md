@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Support heredoc
+
 ## [2.0.1]
 
 - Support `on_ignored_nl` event in Ruby 2.6
