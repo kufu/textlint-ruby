@@ -1,6 +1,8 @@
 ## [Unreleased]
 
-- Support heredoc
+## [2.0.2]
+
+- Support heredoc #4
 
 ## [2.0.1]
 
