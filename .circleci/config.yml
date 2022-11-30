@@ -17,6 +17,10 @@ executors:
     docker:
       - image: ruby:3.0
 
+  ruby_3_1:
+    docker:
+      - image: ruby:3.1
+
 commands:
   run_test:
     steps:
@@ -47,22 +51,18 @@ jobs:
     steps:
       - run_test
 
+  ruby_3_1:
+    executor: ruby_3_1
+    steps:
+      - run_test
+
 workflows:
   version: 2
 
   test:
-    jobs: &jobs
+    jobs:
       - ruby_2_5
       - ruby_2_6
       - ruby_2_7
       - ruby_3_0
-
-  daily_test:
-    triggers:
-      - schedule:
-          cron: "0 23 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs: *jobs
+      - ruby_3_1
