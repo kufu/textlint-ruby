@@ -60,19 +60,9 @@ workflows:
   version: 2
 
   test:
-    jobs: &jobs
+    jobs:
       - ruby_2_5
       - ruby_2_6
       - ruby_2_7
       - ruby_3_0
       - ruby_3_1
-
-  daily_test:
-    triggers:
-      - schedule:
-          cron: "0 23 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs: *jobs
