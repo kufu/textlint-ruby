@@ -21,11 +21,15 @@ executors:
     docker:
       - image: ruby:3.1
 
+  ruby_3_2:
+    docker:
+      - image: ruby:3.2
+
 commands:
   run_test:
     steps:
       - checkout
-      - run: gem install bundler
+      - run: command -v bundle &> /dev/null || gem install bundler
       - run: bundle install
       - run: bundle exec rspec
       - run: bundle exec rubocop
@@ -34,6 +38,7 @@ jobs:
   ruby_2_5:
     executor: ruby_2_5
     steps:
+      - run: gem install bundler -v 2.3.26
       - run_test
 
   ruby_2_6:
@@ -56,6 +61,11 @@ jobs:
     steps:
       - run_test
 
+  ruby_3_2:
+    executor: ruby_3_2
+    steps:
+      - run_test
+
 workflows:
   version: 2
 
@@ -66,3 +76,4 @@ workflows:
       - ruby_2_7
       - ruby_3_0
       - ruby_3_1
+      - ruby_3_2
