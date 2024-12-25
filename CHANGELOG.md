@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Drop support older ruby versions #10
+
 ## [2.0.2]
 
 - Support heredoc #4
