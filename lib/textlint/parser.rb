@@ -5,7 +5,7 @@ require 'ripper'
 module Textlint
   class Parser
     class RubyToTextlintAST < ::Ripper::Filter
-      EVENT_RE = /\Aon_(?<name>\w*)_(?:beg|end)\z/.freeze
+      EVENT_RE = /\Aon_(?<name>\w*)_(?:beg|end)\z/
       TSTRING_BEG_EVENTS = %w[tstring qwords heredoc].freeze
 
       # @param src [String]

@@ -1,22 +1,6 @@
 version: 2.1
 
 executors:
-  ruby_2_5:
-    docker:
-      - image: ruby:2.5
-
-  ruby_2_6:
-    docker:
-      - image: ruby:2.6
-
-  ruby_2_7:
-    docker:
-      - image: ruby:2.7
-
-  ruby_3_0:
-    docker:
-      - image: ruby:3.0
-
   ruby_3_1:
     docker:
       - image: ruby:3.1
@@ -29,8 +13,17 @@ executors:
     docker:
       - image: ruby:3.3
 
-commands:
+  ruby_3_4:
+    docker:
+      - image: ruby:3.4
+
+jobs:
   run_test:
+    parameters:
+      executor:
+        type: string
+    executor: << parameters.executor >>
+    resource_class: small
     steps:
       - checkout
       - run: command -v bundle &> /dev/null || gem install bundler
@@ -38,52 +31,16 @@ commands:
       - run: bundle exec rspec
       - run: bundle exec rubocop
 
-jobs:
-  ruby_2_5:
-    executor: ruby_2_5
-    steps:
-      - run: gem install bundler -v 2.3.26
-      - run_test
-
-  ruby_2_6:
-    executor: ruby_2_6
-    steps:
-      - run_test
-
-  ruby_2_7:
-    executor: ruby_2_7
-    steps:
-      - run_test
-
-  ruby_3_0:
-    executor: ruby_3_0
-    steps:
-      - run_test
-
-  ruby_3_1:
-    executor: ruby_3_1
-    steps:
-      - run_test
-
-  ruby_3_2:
-    executor: ruby_3_2
-    steps:
-      - run_test
-
-  ruby_3_3:
-    executor: ruby_3_3
-    steps:
-      - run_test
-
 workflows:
   version: 2
 
   test:
     jobs:
-      - ruby_2_5
-      - ruby_2_6
-      - ruby_2_7
-      - ruby_3_0
-      - ruby_3_1
-      - ruby_3_2
-      - ruby_3_3
+      - run_test:
+          matrix:
+            parameters:
+              executor:
+                - ruby_3_1
+                - ruby_3_2
+                - ruby_3_3
+                - ruby_3_4

@@ -8,8 +8,8 @@ require 'textlint/cli'
 require 'textlint/server'
 
 module Textlint
-  BREAK_RE = /\r?\n/.freeze
-  LAST_LINE_RE = /(?!\r?\n).*\z/.freeze
+  BREAK_RE = /\r?\n/
+  LAST_LINE_RE = /(?!\r?\n).*\z/
 
   class Error < StandardError; end
   class SyntaxError < Error; end
